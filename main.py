@@ -19,8 +19,7 @@ BOARD = Board()
 
 
 def setup():
-    # Create the UI window. This should be the width of the board plus a
-    # little margin
+    # Create the UI window. Size is width of the board plus a little margin
     turtle.setup(WINDOW_SIZE, WINDOW_SIZE)
 
     # Set the drawing canvas size. The should be actual board size
