@@ -16,13 +16,13 @@ class Moves:
             player -- the color of the player whose piece will be moved.
             board -- the gameboard on which a move will occur.
             available_moves -- list containing the moves available to a given
-                piece.
+                               piece.
         Methods:
             blk_reg -- handles movement logic for regular black pieces.
             red_reg -- handles movement logic for regular red pieces.
             king -- handles movement logic for king pieces.
             force_capture -- if a capture is possible for a given piece,
-                removes all other non-capture moves.
+                             removes all other non-capture moves.
     '''
     def __init__(self, player, board):
         '''
