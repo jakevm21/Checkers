@@ -16,7 +16,7 @@ class GameState:
             current_player -- the color whose turn it is.
             opposite_player -- the color whose turn is next.
             piece_selected -- boolean representing whether a piece has been
-                selected to be move.
+                              selected to be move.
             ai_player -- boolean representing whether the ai is the opponent.
             ai_player_color -- the color the ai is playing as.
             winner -- the player who won the match.
@@ -62,9 +62,9 @@ class GameState:
                 rem_red -- the remaining number of red checker pieces.
                 rem_blk -- the remaining number of black checker pieces.
                 red_move_cnt -- the remaining number of red checkers that can
-                    be moved.
+                                be moved.
                 blk_move_cnt -- the remaining number of black checkers that can
-                    be moved.
+                                be moved.
             Returns:
                 False if both players still have pieces with at least one that
                 can move. Otherwise returns true and defines the winner
