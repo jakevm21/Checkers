@@ -36,9 +36,7 @@ def click_handler(x, y):
             x -- X coordinate of the click. Automatically provided by Turtle.
             y -- Y coordinate of the click. Automatically provided by Turtle.
         Returns:
-            Does not and should not return. Click handlers are a special type
-            of function automatically called by Turtle. You will not have
-            access to anything returned by this function.
+            Nothing.
     '''
     # Draw the board and squares after each click
     pen = turtle.Turtle()
