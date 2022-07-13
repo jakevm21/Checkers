@@ -7,45 +7,23 @@ checkers, and movement of ai and human player checkers including capture moves.
 '''
 import random
 from moves import Moves
-from constants import EMPTY, BLACK, RED, K_BLACK, K_RED, DEFAULT_BOARD,\
+from constants import DEFAULT_BOARD,\
     NUM_SQUARES, SQUARE, UP_RIGHT, UP_LEFT, DOWN_RIGHT, DOWN_LEFT, CAP_UP_R,\
     CAP_UP_L, CAP_DOWN_R, CAP_DOWN_L, MIN_BOUND, MAX_BOUND
+from piece_options import PieceOptions as po
 
 
 class Board:
-    '''
-        Class -- Board
-            Represents the checkerboard.
-        Attributes:
-            board -- the current gameboard with updated piece positions.
-            x -- location of mouse click along the x-axis.
-            y -- location of mouse click along the y-axis.
-            axis_size -- size of half the overall board size.
-            square_size -- size of a single side of a checkerboard square.
-            s_p_col -- index of the selected piece's column.
-            s_p_row -- index of the selected piece's row.
-            red_pieces -- remaining red pieces.
-            black_pieces -- remaining black pieces.
-            clicked_row -- index of the row clicked by mouse.
-            clicked_col -- index of the column clicked by the mouse.
-            available_moves -- list containing moves available to a piece.
-        Methods:
-            out_of_bounds -- checks if a mouse click was outside boundary of
-                checkerboard.
-            click_to_row -- converts a click's location on y-axis to an
-                associated row index position.
-            click_to_col -- converts a click's location on x-axis to an
-                associated column index position.
-            is_player_square -- determines whether a piece in a given square
-                belongs to the player.
-            is_movable_piece -- determeines whether a given piece is movable.
-            valid_move -- determines whether an attempted move is valid.
-            move_piece -- moves a piece to its new location on checkerboard.
-            ai_move -- executes the turn for ai player.
-            movable_pieces -- creates a list containing ordered pairs with the
-                row and column indices of a piece that can move.
-            move_count -- counts the number moves available to a certain color.
-    '''
+    DEFAULT_BOARD = DEFAULT_BOARD = [
+        [po.empty, po.blk_r, po.empty, po.blk_r, po.empty, po.blk_r, po.empty, po.blk_r],
+        [po.blk_r, po.empty, po.blk_r, po.empty, po.blk_r, po.empty, po.blk_r, po.empty],
+        [po.empty, po.blk_r, po.empty, po.blk_r, po.empty, po.blk_r, po.empty, po.blk_r],
+        [po.empty, po.empty, po.empty, po.empty, po.empty, po.empty, po.empty, po.empty],
+        [po.empty, po.empty, po.empty, po.empty, po.empty, po.empty, po.empty, po.empty],
+        [po.red_r, po.empty, po.red_r, po.empty, po.red_r, po.empty, po.red_r, po.empty],
+        [po.empty, po.red_r, po.empty, po.red_r, po.empty, po.red_r, po.empty, po.red_r],
+        [po.red_r, po.empty, po.red_r, po.empty, po.red_r, po.empty, po.red_r, po.empty]
+    ]
     def __init__(self):
         '''
             Constructor -- creates a new instance of Board.
@@ -59,8 +37,8 @@ class Board:
         self.square_size = 50
         self.s_p_col = 0
         self.s_p_row = 0
-        self.red_pieces = 12
-        self.black_pieces = 12
+        self.po.red_r_pieces = 12
+        self.po.blk_r_pieces = 12
 
     def out_of_bounds(self):
         '''
@@ -168,21 +146,21 @@ class Board:
         # Stores which moves are available to selected piece
         self.available_moves = []
 
-        # Moves available to black
-        if current_player == BLACK:
+        # Moves available to po.blk_r
+        if current_player == po.blk_r:
             # Regular piece
-            if board[row][col] == BLACK:
+            if board[row][col] == po.blk_r:
                 moves.blk_reg(row, col)
             # King piece
-            elif board[row][col] == K_BLACK:
+            elif board[row][col] == K_po.blk_r:
                 moves.king(row, col)
-        # Moves available to red regular pieces
-        elif current_player == RED:
+        # Moves available to po.red_r regular pieces
+        elif current_player == po.red_r:
             # Regular piece
-            if board[row][col] == RED:
-                moves.red_reg(row, col)
+            if board[row][col] == po.red_r:
+                moves.po.red_r_reg(row, col)
             # King piece
-            elif board[row][col] == K_RED:
+            elif board[row][col] == K_po.red_r:
                 moves.king(row, col)
 
         # If capture possible, force capture
@@ -211,29 +189,29 @@ class Board:
 
         if row == s_p_row + 1:
             if s_p_col + 1 == col and UP_RIGHT in available_moves:
-                if board[row][col] == EMPTY:
+                if board[row][col] == po.empty:
                     return True
             elif s_p_col - 1 == col and UP_LEFT in available_moves:
-                if board[row][col] == EMPTY:
+                if board[row][col] == po.empty:
                     return True
         elif row == s_p_row - 1:
             if s_p_col + 1 == col and DOWN_RIGHT in available_moves:
-                if board[row][col] == EMPTY:
+                if board[row][col] == po.empty:
                     return True
             elif s_p_col - 1 == col and DOWN_LEFT in available_moves:
-                if board[row][col] == EMPTY:
+                if board[row][col] == po.empty:
                     return True
         elif row == s_p_row + 2:
             if s_p_col + 2 == col and CAP_UP_R in available_moves:
-                if board[row][col] == EMPTY:
+                if board[row][col] == po.empty:
                     return True
             elif s_p_col - 2 == col and CAP_UP_L in available_moves:
-                if board[row][col] == EMPTY:
+                if board[row][col] == po.empty:
                     return True
         elif row == s_p_row - 2:
             if (s_p_col + 2 == col and CAP_DOWN_R in available_moves) or\
                (s_p_col - 2 == col and CAP_DOWN_L in available_moves):
-                if board[row][col] == EMPTY:
+                if board[row][col] == po.empty:
                     return True
 
     def move_piece(self, current_player):
@@ -241,7 +219,7 @@ class Board:
             Method -- move_piece
                 Carries out a move by a certain color player by changing its
                 location in the board attribute. If capture is made, erases the
-                captured piece from the board.
+                captupo.red_r piece from the board.
             Parameters:
                 self -- the current Board object.
                 current_player -- the color of the piece being moved.
@@ -254,35 +232,35 @@ class Board:
         s_p_col = self.s_p_col
         capture_made = False
 
-        # If the move was a capture move, erase the captured piece
+        # If the move was a capture move, erase the captupo.red_r piece
         if row == s_p_row + 2 or row == s_p_row + 4:
             if col == s_p_col + 2:
-                self.board[row - 1][col - 1] = EMPTY
+                self.board[row - 1][col - 1] = po.empty
             elif col == s_p_col - 2:
-                self.board[row - 1][col + 1] = EMPTY
+                self.board[row - 1][col + 1] = po.empty
             capture_made = True
         elif row == s_p_row - 2 or row == s_p_row - 4:
             if col == s_p_col + 2:
-                self.board[row + 1][col - 1] = EMPTY
+                self.board[row + 1][col - 1] = po.empty
             elif col == s_p_col - 2:
-                self.board[row + 1][col + 1] = EMPTY
+                self.board[row + 1][col + 1] = po.empty
             capture_made = True
 
         if capture_made:
-            if current_player == BLACK:
-                self.red_pieces -= 1
-            elif current_player == RED:
-                self.black_pieces -= 1
+            if current_player == po.blk_r:
+                self.po.red_r_pieces -= 1
+            elif current_player == po.red_r:
+                self.po.blk_r_pieces -= 1
 
         # If the piece reaches opposite end of board convert to King
-        if row == MAX_BOUND and self.board[s_p_row][s_p_col] == BLACK:
-            self.board[row][col] = K_BLACK
-        elif row == MIN_BOUND and self.board[s_p_row][s_p_col] == RED:
-            self.board[row][col] = K_RED
+        if row == MAX_BOUND and self.board[s_p_row][s_p_col] == po.blk_r:
+            self.board[row][col] = K_po.blk_r
+        elif row == MIN_BOUND and self.board[s_p_row][s_p_col] == po.red_r:
+            self.board[row][col] = K_po.red_r
         else:
             self.board[row][col] = self.board[s_p_row][s_p_col]
 
-        self.board[s_p_row][s_p_col] = EMPTY
+        self.board[s_p_row][s_p_col] = po.empty
         self.available_moves = []
 
     def ai_move(self, ai_color):
@@ -346,12 +324,12 @@ class Board:
                 self -- the current Board object.
                 current_player -- the color whose pieces are being checked.
             Returns:
-                A list containing the ordered pairs representing the indices
+                A list containing the ordepo.red_r pairs representing the indices
                 of the pieces that can be moved. With the row index position in
                 the first position and the column index position in the second
                 position.
         '''
-        # Variable to store the ordered pairs that represent a movable piece's
+        # Variable to store the ordepo.red_r pairs that represent a movable piece's
         # row and column index position as (row, col)
         movable_pieces = []
         piece_row = -1
