@@ -53,7 +53,7 @@ class GUI:
         self.pen.color(OUTLINE_COLOR, BG_COLOR)
         # Outline of checkerboard
         self.pen.setposition(self.def_pos, self.def_pos)
-        self._draw_square(self.brd_size)
+        self._draw_square(self.brd_size, OUTLINE_COLOR, BG_COLOR)
     
     def _draw_all_squares(self) -> None:
         for col in range(self.num_sqs):
@@ -63,11 +63,11 @@ class GUI:
                                      self.def_pos + self.sq_size * row)
                 # Draw a square at every other square
                 if col % 2 != row % 2:
-                    self._draw_square(self.sq_size)
+                    self._draw_square(self.sq_size, OUTLINE_COLOR, SQ_COLOR)
 
-    def _draw_square(self, size) -> None:
+    def _draw_square(self, size: int, outline_color: str, fill_color: str) -> None:
             RIGHT_ANGLE = 90
-            self.pen.color(OUTLINE_COLOR, SQ_COLOR)  # Outline is black, filling is light gray
+            self.pen.color(outline_color, fill_color)  # Outline is black, filling is light gray
             self.pen.pendown()
             self.pen.begin_fill()
             for _ in range(4):
