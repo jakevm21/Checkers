@@ -1,10 +1,16 @@
 from game_settings import GameSettings
+from gamestate import GameState
+from gui import GUI
 from piece_options import PieceOptions as po
+BLK_PIECES = (po.blk_r, po.blk_k)
+RED_PIECES = (po.red_r, po.red_k)
 
 
 class Game:
     def __init__(self) -> None:
         self.prefs = self._match_settings()
+        self.gs = GameState()
+        self.gui = self._gui_setup()
 
     def _match_settings(self) -> GameSettings:
         # Get num players
@@ -12,7 +18,7 @@ class Game:
 
         # Get player colors
         if num_players == 1:
-            p1 = self._player_color()
+            p1 = self._choose_player_color()
             p2 = po.red if p1 == po.blk else po.blk
         else:
             p1 = po.red
@@ -36,9 +42,9 @@ class Game:
             elif ch in MULTI_PLAYER:
                 return 2
             else:
-                print("Invalid selection...")
+                print("\nInvalid selection...\n")
 
-    def _player_color(self) -> str:
+    def _choose_player_color(self) -> str:
         BLACK = ("1", "black")
         RED = ("2", "red")
 
@@ -52,5 +58,30 @@ class Game:
             elif ch in RED:
                 return po.red
             else:
-                print("Invalid selection...")
+                print("\nInvalid selection...\n")
 
+    def _draw_board(self) -> None:
+        pass
+
+    def _gui_setup(self) -> GUI:
+        gui = GUI()
+        for i, row in enumerate(self.gs.get_board()):
+            for j, sq in enumerate(row):
+                if sq != po.empty:
+                    if sq == po.blk_r or sq == po.blk_k:
+                        color = po.blk
+                    else:
+                        color = po.red
+                    if sq == po.blk_r or sq == po.red_r:
+                        rank = po.reg
+                    else:
+                        rank = po.kng
+                    gui.draw_checker(i, j, color, rank)
+        return gui
+
+    def _draw_checkers(self):
+        for row in range(len(self.gs.get_board())):
+            for col in range(len(self.gs.get_board()[0])):
+                if self.gs.get_board[row][col] in BLK_PIECES or\
+                   self.gs.get_board[row][col] in RED_PIECES:
+                   pass
