@@ -4,6 +4,7 @@ CS5001 Fall 2021
 Final Project.
 '''
 import turtle
+from game import Game
 from gamestate import GameState
 from board import Board
 from constants import BLACK, RED, NUM_SQUARES, SQUARE, UP_RIGHT, UP_LEFT,\
@@ -353,36 +354,7 @@ def victory_message(winner):
 
 
 def main():
-    num_players_selected = False
-    while not num_players_selected:
-        ai = input("How many players?\n1 -- One player\
-                    \n2 -- Two players\n")
-        if ai == "1":
-            GAMESTATE.ai_player = True
-            num_players_selected = True
-            # player_color_selected = False
-            # while not player_color_selected:
-            #     color = input("What color would you like to play as?\
-            #                   \n1 -- Black\n2 -- Red\n")
-            #     if color == "1":
-            #         player_color_selected = True
-            #         self.ai_player_color = RED
-            #     elif color == "2":
-            #         player_color_selected = True
-            #         self.ai_player_color = BLACK
-            #     else:
-            #         print("Invalid selection...")
-        elif ai == "2":
-            num_players_selected = True
-        else:
-            print("Invalid selection...")
-
-    setup()
-    pen = turtle.Turtle()  # Variable that will do the drawing
-    pen.penup()  # This allows the pen to be moved
-    pen.hideturtle()  # This gets rid of the triangle cursor
-    draw_board(pen)
-    draw_board_squares(pen)
+    Game()
 
     # Click handling
     screen = turtle.Screen()
