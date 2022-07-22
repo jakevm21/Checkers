@@ -1,4 +1,5 @@
 import turtle as turt
+from typing import List
 from piece_options import PieceOptions as po
 
 NUM_SQS = 8     # The number of squares on each row
@@ -13,8 +14,12 @@ class GUI:
         self.num_sqs = num_sqs
         self.sq_size = sq_size
         self.brd_size = num_sqs * sq_size         # Size of the board
+        self.brd_x_max = self.brd_size >> 1
+        self.brd_x_min = -self.brd_x_max
+        self.brd_y_max = self.brd_size >> 1
+        self.brd_y_min = -self.brd_y_max
         self.wndw_size = self.brd_size + sq_size  # The extra + SQUARE is the margin
-        self.def_pos = (-self.brd_size >> 1) - 1    # Bottom left corner of board
+        self.def_pos = (-self.brd_size >> 1) - 1  # Bottom left corner of board
         self.piece_pos = self.sq_size >> 1        # Center of a square
         self.piece_size = self.sq_size >> 1
         self.crown_pos = CROWN_POS                # Position of crown on piece
@@ -22,8 +27,6 @@ class GUI:
 
         self._screen_setup()
         self.pen = self._initialize_turt()        # Variable that will do the drawing
-        self.draw_board()
-        self._draw_all_squares()
 
     def _screen_setup(self) -> None:
         # Create the UI window. Size is width of the board plus a little margin
@@ -40,7 +43,7 @@ class GUI:
         pen.hideturtle()        # This gets rid of the triangle cursor
         return pen
     
-    def draw_board(self) -> None:
+    def draw_board(self, brd: List[List[po]]) -> None:
         '''
             Function -- draw_board
                 Draws the outline of the board of a predefined size.
@@ -54,16 +57,31 @@ class GUI:
         # Outline of checkerboard
         self.pen.setposition(self.def_pos, self.def_pos)
         self._draw_square(self.brd_size, OUTLINE_COLOR, BG_COLOR)
+        # Each checkerboard square
+        self._draw_all_squares(brd)
     
-    def _draw_all_squares(self) -> None:
-        for col in range(self.num_sqs):
-            for row in range(self.num_sqs):
+    def _draw_all_squares(self, brd: List[List[po]]) -> None:
+        for i, row in enumerate(brd):
+            for j, sq in enumerate(row):
                 # Places pen in bottom left of each square
-                self.pen.setposition(self.def_pos + self.sq_size * col,
-                                     self.def_pos + self.sq_size * row)
+                x_pos = self.def_pos + (self.sq_size * j)
+                y_pos = self.def_pos + (self.sq_size * i)
+                self.pen.setposition(x_pos, y_pos)
                 # Draw a square at every other square
-                if col % 2 != row % 2:
+                if i % 2 != j % 2:
                     self._draw_square(self.sq_size, OUTLINE_COLOR, SQ_COLOR)
+                # Draw the checkers
+                if sq != po.empty:
+                    self.pen.setposition(x_pos + self.piece_pos, y_pos)
+                    if sq == po.blk_r or sq == po.blk_k:
+                        color = po.blk
+                    else:
+                        color = po.red
+                    if sq == po.blk_r or sq == po.red_r:
+                        rank = po.reg
+                    else:
+                        rank = po.kng
+                    self.draw_checker(color, rank)
 
     def _draw_square(self, size: int, outline_color: str, fill_color: str) -> None:
             RIGHT_ANGLE = 90
@@ -83,12 +101,7 @@ class GUI:
         self.pen.end_fill()
         self.pen.penup()
 
-    def draw_checker(self, row: int, col: int, color: po, rank: po) -> None:
-        # Set the turtle in position to draw a checker
-        x_pos = self.def_pos + (self.sq_size * col) + self.piece_pos
-        y_pos = self.def_pos + (self.sq_size * row)
-        self.pen.setposition(x_pos, y_pos)
-
+    def draw_checker(self, color: po, rank: po) -> None:
         if color == po.blk:
             self.pen.color("black")
         else:
@@ -99,3 +112,18 @@ class GUI:
         if rank == 0:
             # TODO: Draw crown
             pass
+
+    def get_brd_size(self):
+        return self.brd_size
+
+    def get_x_max(self):
+        return self.brd_x_max
+
+    def get_x_min(self):
+        return self.brd_x_min
+
+    def get_y_max(self):
+        return self.brd_y_max
+
+    def get_y_min(self):
+        return self.brd_y_min

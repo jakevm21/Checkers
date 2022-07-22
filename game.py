@@ -1,3 +1,4 @@
+import turtle as turt
 from game_settings import GameSettings
 from gamestate import GameState
 from gui import GUI
@@ -11,6 +12,8 @@ class Game:
         self.prefs = self._match_settings()
         self.gs = GameState()
         self.gui = self._gui_setup()
+        self.screen = turt.Screen()
+        self._game_loop()
 
     def _match_settings(self) -> GameSettings:
         # Get num players
@@ -60,28 +63,27 @@ class Game:
             else:
                 print("\nInvalid selection...\n")
 
-    def _draw_board(self) -> None:
-        pass
-
     def _gui_setup(self) -> GUI:
         gui = GUI()
-        for i, row in enumerate(self.gs.get_board()):
-            for j, sq in enumerate(row):
-                if sq != po.empty:
-                    if sq == po.blk_r or sq == po.blk_k:
-                        color = po.blk
-                    else:
-                        color = po.red
-                    if sq == po.blk_r or sq == po.red_r:
-                        rank = po.reg
-                    else:
-                        rank = po.kng
-                    gui.draw_checker(i, j, color, rank)
+        gui.draw_board(self.gs.get_board())
         return gui
 
-    def _draw_checkers(self):
-        for row in range(len(self.gs.get_board())):
-            for col in range(len(self.gs.get_board()[0])):
-                if self.gs.get_board[row][col] in BLK_PIECES or\
-                   self.gs.get_board[row][col] in RED_PIECES:
-                   pass
+    def _is_inbounds(self, x: float, y: float):
+        return x < self.gui.get_x_max() and y < self.gui.get_y_max() and \
+               x > -self.gui.get_x_max() and y > -self.gui.get_y_min()
+
+    def _click_handler(self, x: float, y: float):
+        self.gui.draw_board(self.gs.get_board())
+
+        print("Clicked at", x, y)
+
+        if not self._is_inbounds(x, y):
+            raise IndexError
+
+    def _game_loop(self):
+        try:
+            self.screen.onclick(self._click_handler)
+        except IndexError:
+            print("Click was out of bounds!")
+        
+        turt.done()
