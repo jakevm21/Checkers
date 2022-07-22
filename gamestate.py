@@ -68,3 +68,6 @@ class GameState:
 
     def get_board(self):
         return self.board
+
+    def get_cur_player(self):
+        return self.cur_player
