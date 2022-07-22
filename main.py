@@ -356,14 +356,14 @@ def victory_message(winner):
 def main():
     Game()
 
-    # Click handling
-    screen = turtle.Screen()
-    try:
-        screen.onclick(click_handler)
-    except IndexError:
-        print("Click was out of bounds!")
+    # # Click handling
+    # screen = turtle.Screen()
+    # try:
+    #     screen.onclick(click_handler)
+    # except IndexError:
+    #     print("Click was out of bounds!")
 
-    turtle.done()  # Stops the window from closing
+    # turtle.done()  # Stops the window from closing
 
 
 if __name__ == "__main__":
