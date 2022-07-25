@@ -5,18 +5,21 @@ Gamestate class. Handles the logic regarding whose turn it is, whether there
 is an ai player or two human players, and whether the game over conditions
 have been met.
 '''
-from piece_options import PieceOptions as po
+from typing import Tuple
+from piece_options import *
+from pieces import *
 DEFAULT_BOARD = [
-    [po.empty, po.blk_r, po.empty, po.blk_r, po.empty, po.blk_r, po.empty, po.blk_r],
-    [po.blk_r, po.empty, po.blk_r, po.empty, po.blk_r, po.empty, po.blk_r, po.empty],
-    [po.empty, po.blk_r, po.empty, po.blk_r, po.empty, po.blk_r, po.empty, po.blk_r],
-    [po.empty, po.empty, po.empty, po.empty, po.empty, po.empty, po.empty, po.empty],
-    [po.empty, po.empty, po.empty, po.empty, po.empty, po.empty, po.empty, po.empty],
-    [po.red_r, po.empty, po.red_r, po.empty, po.red_r, po.empty, po.red_r, po.empty],
-    [po.empty, po.red_r, po.empty, po.red_r, po.empty, po.red_r, po.empty, po.red_r],
-    [po.red_r, po.empty, po.red_r, po.empty, po.red_r, po.empty, po.red_r, po.empty]
+    [None, BlackPiece(), None, BlackPiece(), None, BlackPiece(), None, BlackPiece()],
+    [BlackPiece(), None, BlackPiece(), None, BlackPiece(), None, BlackPiece(), None],
+    [None, BlackPiece(), None, BlackPiece(), None, BlackPiece(), None, BlackPiece()],
+    [None, None, None, None, None, None, None, None],
+    [None, None, None, None, None, None, None, None],
+    [RedPiece(), None, RedPiece(), None, RedPiece(), None, RedPiece(), None],
+    [None, RedPiece(), None, RedPiece(), None, RedPiece(), None, RedPiece()],
+    [RedPiece(), None, RedPiece(), None, RedPiece(), None, RedPiece(), None]
 ]
 START_PIECE_COUNT = 12
+
 
 class GameState:
     '''
@@ -29,7 +32,7 @@ class GameState:
             Parameters:
                 self -- the current GameState object.
         '''
-        self.cur_player = po.blk
+        self.cur_player = BLK
         self.num_blk = START_PIECE_COUNT
         self.num_red = START_PIECE_COUNT
         self.board = DEFAULT_BOARD
@@ -44,10 +47,10 @@ class GameState:
             Returns:
                 Nothing.
         '''
-        if self.cur_player == po.blk:
-            self.cur_player = po.red
+        if self.cur_player == BLK:
+            self.cur_player = RED
         else:
-            self.cur_player = po.blk
+            self.cur_player = BLK
 
     def game_over(self):
         '''
@@ -62,6 +65,13 @@ class GameState:
                 attribute according to the winning color.
         '''
         return self.num_blk == 0 or self.num_red == 0
+
+    def count_avail_moves(self) -> set[Tuple[int, int]]:
+        for i, row in enumerate(self.board):
+            for j, sq in enumerate(row):
+                if sq and sq.get_color == self.cur_player:
+                    # TODO: functionality to get moves
+                    pass
 
     def get_winner(self) -> str:
         return self.winner

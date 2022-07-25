@@ -1,11 +1,11 @@
-from piece_options import PieceOptions as po
+from piece_options import *
 
 class GameSettings:
-    def __init__(self, num_plrs: int, p1_color=po.blk, p2_color=po.red) -> None:
+    def __init__(self, num_plrs: int, p1_color=BLK, p2_color=RED) -> None:
         self.num_plrs = num_plrs
         self.p1_color = p1_color
         self.p2_color = p2_color
-    
+
     def get_num_players(self) -> int:
         return self.num_plrs
     

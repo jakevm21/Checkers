@@ -1,10 +1,12 @@
 import turtle as turt
+from typing import List, Tuple
 from game_settings import GameSettings
 from gamestate import GameState
 from gui import GUI
-from piece_options import PieceOptions as po
-BLK_PIECES = (po.blk_r, po.blk_k)
-RED_PIECES = (po.red_r, po.red_k)
+from piece_options import *
+BLK_PIECES = (BLK_R, BLK_K)
+RED_PIECES = (RED_R, RED_K)
+MOVES = (-2, -1, 1, 2)
 
 
 class Game:
@@ -22,10 +24,10 @@ class Game:
         # Get player colors
         if num_players == 1:
             p1 = self._choose_player_color()
-            p2 = po.red if p1 == po.blk else po.blk
+            p2 = RED if p1 == BLK else BLK
         else:
-            p1 = po.red
-            p2 = po.blk
+            p1 = RED
+            p2 = BLK
         
         return GameSettings(num_players, p1, p2)
 
@@ -48,18 +50,18 @@ class Game:
                 print("\nInvalid selection...\n")
 
     def _choose_player_color(self) -> str:
-        BLACK = ("1", "black")
-        RED = ("2", "red")
+        OPT_1 = ("1", "black")
+        OPT_2 = ("2", "red")
 
         while True:
             ch = input("What color would you like to play as?\n"
                        "1 -- Black\n"
                        "2 -- Red\n"
                        "> ").lower().strip()
-            if ch in BLACK:
-                return po.blk
-            elif ch in RED:
-                return po.red
+            if ch in OPT_1:
+                return BLK
+            elif ch in OPT_2:
+                return RED
             else:
                 print("\nInvalid selection...\n")
 
@@ -68,22 +70,44 @@ class Game:
         gui.draw_board(self.gs.get_board())
         return gui
 
-    def _is_inbounds(self, x: float, y: float):
+    def _is_inbounds(self, x: float, y: float) -> bool:
         return x < self.gui.get_x_max() and y < self.gui.get_y_max() and \
-               x > -self.gui.get_x_max() and y > -self.gui.get_y_min()
+               x > self.gui.get_x_min() and y > self.gui.get_y_min()
 
-    def _click_handler(self, x: float, y: float):
+    def _is_player_piece(self, row: int, col: int) -> bool:
+        sq = self.gs.get_board()[row][col]
+        if self.gs.get_cur_player() == BLK:
+            return sq == BLK_R or sq == BLK_K
+        else:
+            return sq == RED_R or sq == RED_K
+
+    def _get_available_moves(self, row: int, col: int) -> List[Tuple[int, int]]:
+        piece = self.gs.board[row][col]
+        
+
+    def _handle_move(self, row: int, col: int) -> None:
+        self.gui.select_piece(row, col, self.gs.get_board()[row][col])
+
+    def _click_handler(self, x: float, y: float) -> None:
         self.gui.draw_board(self.gs.get_board())
 
         print("Clicked at", x, y)
 
         if not self._is_inbounds(x, y):
-            raise IndexError
+            print("Click was out of bounds!")
+            return
+        
+        row, col = self.gui.click_to_square(x, y)
+
+        if not self._is_player_piece(row, col):
+            print("That's not your piece!")
+            return
+        else:
+            print("That's your piece!")
+
+        self._handle_move()
 
     def _game_loop(self):
-        try:
-            self.screen.onclick(self._click_handler)
-        except IndexError:
-            print("Click was out of bounds!")
-        
+        self.screen.onclick(self._click_handler)
+
         turt.done()

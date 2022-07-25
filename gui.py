@@ -1,13 +1,14 @@
 import turtle as turt
-from typing import List
-from piece_options import PieceOptions as po
+from typing import List, Tuple
+from piece_options import *
+from pieces import Piece
 
-NUM_SQS = 8     # The number of squares on each row
-SQ_SIZE = 50    # The size of each square in the checkerboard
+
 SQ_COLOR = "light gray"
 OUTLINE_COLOR = "black"
 BG_COLOR = "white"
 CROWN_POS = 7
+SELECTION_COLOR = "blue"
 
 class GUI:
     def __init__(self, num_sqs=NUM_SQS, sq_size=SQ_SIZE) -> None:
@@ -43,7 +44,7 @@ class GUI:
         pen.hideturtle()        # This gets rid of the triangle cursor
         return pen
     
-    def draw_board(self, brd: List[List[po]]) -> None:
+    def draw_board(self, brd: List[List[Piece]]) -> None:
         '''
             Function -- draw_board
                 Draws the outline of the board of a predefined size.
@@ -60,7 +61,7 @@ class GUI:
         # Each checkerboard square
         self._draw_all_squares(brd)
     
-    def _draw_all_squares(self, brd: List[List[po]]) -> None:
+    def _draw_all_squares(self, brd: List[List[Piece]]) -> None:
         for i, row in enumerate(brd):
             for j, sq in enumerate(row):
                 # Places pen in bottom left of each square
@@ -71,21 +72,12 @@ class GUI:
                 if i % 2 != j % 2:
                     self._draw_square(self.sq_size, OUTLINE_COLOR, SQ_COLOR)
                 # Draw the checkers
-                if sq != po.empty:
-                    self.pen.setposition(x_pos + self.piece_pos, y_pos)
-                    if sq == po.blk_r or sq == po.blk_k:
-                        color = po.blk
-                    else:
-                        color = po.red
-                    if sq == po.blk_r or sq == po.red_r:
-                        rank = po.reg
-                    else:
-                        rank = po.kng
-                    self.draw_checker(color, rank)
+                if sq:
+                    self._draw_checker(sq.get_color(), sq.get_rank())
 
     def _draw_square(self, size: int, outline_color: str, fill_color: str) -> None:
             RIGHT_ANGLE = 90
-            self.pen.color(outline_color, fill_color)  # Outline is black, filling is light gray
+            self.pen.color(outline_color, fill_color)
             self.pen.pendown()
             self.pen.begin_fill()
             for _ in range(4):
@@ -101,17 +93,41 @@ class GUI:
         self.pen.end_fill()
         self.pen.penup()
 
-    def draw_checker(self, color: po, rank: po) -> None:
-        if color == po.blk:
-            self.pen.color("black")
-        else:
-            self.pen.color("red")
+    def _draw_checker(self, color: str, rank: int) -> None:
+        self.pen.color(color)
 
         self._draw_circle(self.piece_size)
         # if piece is king draw crown
-        if rank == 0:
+        if rank == KNG:
             # TODO: Draw crown
             pass
+
+    def click_to_square(self, x: float, y: float) -> Tuple[int, int]:
+        if y < 0:
+            row = self.brd_y_max - abs(y)
+        else:
+            row = self.brd_y_max + y
+        row = int(row) // self.sq_size
+
+        if x < 0:
+            col = self.brd_x_max - abs(x)
+        else:
+            col = self.brd_x_max + x
+        col = int(col) // self.sq_size
+
+        return (row, col)
+
+    def select_piece(self, row: int, col: int, piece: Piece) -> None:
+        x_pos = self.def_pos + (self.sq_size * col)
+        y_pos = self.def_pos + (self.sq_size * row)
+
+        # change outline to blue
+        self.pen.setposition(x_pos, y_pos)
+        self._draw_square(self.sq_size, SELECTION_COLOR, SQ_COLOR)
+
+        # redraw piece
+        self.pen.setposition(x_pos + self.piece_pos, y_pos)
+        self._draw_checker(piece.get_color(), piece.get_rank())
 
     def get_brd_size(self):
         return self.brd_size
