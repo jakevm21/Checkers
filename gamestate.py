@@ -77,16 +77,16 @@ class GameState:
             for j, sq in enumerate(row):
                 if sq and sq.get_color() == self.cur_plyr:
                     # TODO: functionality to get moves
-                    for new_row, new_col in sq.get_moves(i, j):
-                        new_sq = self._board[new_row][new_col]
+                    for r, c in sq.get_moves(i, j):
+                        new_sq = self._board[r][c]
                         if not new_sq:
-                            moves.add((new_row, new_col))
+                            moves.add((r, c))
                         elif new_sq.get_color() != self.cur_plyr:
                             # TODO: functionality to get capturing moves
-                            for new_new_row, new_new_col in sq.get_moves(new_row, new_col):
-                                new_new_sq = self._board[new_new_row][new_new_col]
-                                if not new_new_sq:
-                                    moves.add((new_new_row, new_new_col))
+                            for r, c in sq.get_cap_moves(i, j):
+                                new_sq = self._board[r][c]
+                                if not new_sq:
+                                    moves.add((r, c))
 
         return moves
 

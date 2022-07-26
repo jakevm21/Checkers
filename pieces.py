@@ -22,11 +22,14 @@ class Piece:
     def get_moves(self, row: int, col: int) -> List[Tuple[int, int]]:
         pass
 
+    def get_cap_moves(self, row: int, col: int) -> List[Tuple[int, int]]:
+        pass
+
 class BlackPiece(Piece):
     def __init__(self, rank=REG) -> None:
         super().__init__(BLK, rank)
     
-    def get_moves(self, row: int, col: int):
+    def get_moves(self, row: int, col: int) -> List[Tuple[int, int]]:
         moves = []
 
         if row < NUM_SQS - 1:
@@ -39,6 +42,22 @@ class BlackPiece(Piece):
                 moves.append((row - 1, col - 1))
             if col < NUM_SQS - 1:
                 moves.append((row - 1, col + 1))
+
+        return moves
+
+    def get_cap_moves(self, row: int, col: int) -> List[Tuple[int, int]]:
+        moves = []
+
+        if row + 2 <= NUM_SQS - 1:
+            if col - 2 >= 0:
+                moves.append((row + 2, col - 2))
+            if col + 2 <= NUM_SQS - 1:
+                moves.append((row + 2, col + 2))
+        if self.rank == KNG and row - 2 >= 0:
+            if col - 2 >= 0:
+                moves.append((row - 2, col - 2))
+            if col + 2 <= NUM_SQS - 1:
+                moves.append((row - 2, col + 2))
 
         return moves
 
@@ -60,4 +79,20 @@ class RedPiece(Piece):
             if col < NUM_SQS - 1:
                 moves.append((row + 1, col + 1))
         
+        return moves
+
+    def get_cap_moves(self, row: int, col: int) -> List[Tuple[int, int]]:
+        moves = []
+
+        if row - 2 <= NUM_SQS - 1:
+            if col - 2 >= 0:
+                moves.append((row - 2, col - 2))
+            if col + 2 <= NUM_SQS - 1:
+                moves.append((row - 2, col + 2))
+        if self.rank == KNG and row + 2 <= NUM_SQS - 1:
+            if col - 2 >= 0:
+                moves.append((row + 2, col - 2))
+            if col + 2 <= NUM_SQS - 1:
+                moves.append((row - 2, col + 2))
+
         return moves

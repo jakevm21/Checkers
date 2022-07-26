@@ -83,16 +83,15 @@ class Game:
         for sq in piece.get_moves(row, col):
             if sq in self.gs.get_avail_moves():
                 moves.append(sq)
+        for sq in piece.get_cap_moves(row, col):
+            if sq in self.gs.get_avail_moves():
+                moves.append(sq)
 
         return moves
 
     def _handle_move(self, row: int, col: int) -> None:
         if (row, col) not in self.gs.get_selected_piece_moves():
             print("That is not a valid move!")
-            # self.gui.select_piece(row,
-            #                       col,
-            #                       self.gs.get_board()[row][col],
-            #                       self.gs.get_selected_piece_moves())
             return
         else:
             self.gs.move_piece(row, col)
