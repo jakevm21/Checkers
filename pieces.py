@@ -1,5 +1,4 @@
 from typing import List, Tuple
-from gui import NUM_SQS
 from piece_options import *
 
 
@@ -16,6 +15,12 @@ class Piece:
 
     def get_rank(self):
         return self.rank
+
+    def get_moves(self, row: int, col: int) -> List[Tuple[int, int]]:
+        pass
+
+    def get_moves(self, row: int, col: int) -> List[Tuple[int, int]]:
+        pass
 
 class BlackPiece(Piece):
     def __init__(self, rank=REG) -> None:
@@ -35,11 +40,13 @@ class BlackPiece(Piece):
             if col < NUM_SQS - 1:
                 moves.append((row - 1, col + 1))
 
+        return moves
+
 class RedPiece(Piece):
     def __init__(self, rank=REG) -> None:
         super().__init__(RED, rank)
-    
-    def get_potential_moves(self, row: int, col: int) -> List[Tuple[int, int]]:
+
+    def get_moves(self, row: int, col: int) -> List[Tuple[int, int]]:
         moves = []
 
         if row > 0:

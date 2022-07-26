@@ -5,7 +5,7 @@ Gamestate class. Handles the logic regarding whose turn it is, whether there
 is an ai player or two human players, and whether the game over conditions
 have been met.
 '''
-from typing import Tuple
+from typing import Set, Tuple
 from piece_options import *
 from pieces import *
 DEFAULT_BOARD = [
@@ -33,10 +33,11 @@ class GameState:
                 self -- the current GameState object.
         '''
         self.cur_player = BLK
+        self.op_player = RED
         self.num_blk = START_PIECE_COUNT
         self.num_red = START_PIECE_COUNT
         self.board = DEFAULT_BOARD
-        self.winner = None
+        self.pos_moves = self.avail_moves()
 
     def swap_turn(self):
         '''
@@ -49,8 +50,11 @@ class GameState:
         '''
         if self.cur_player == BLK:
             self.cur_player = RED
+            self.op_player = BLK
         else:
             self.cur_player = BLK
+            self.op_player = RED
+        self.pos_moves = self.avail_moves()
 
     def game_over(self):
         '''
@@ -64,20 +68,33 @@ class GameState:
                 can move. Otherwise returns true and defines the winner
                 attribute according to the winning color.
         '''
-        return self.num_blk == 0 or self.num_red == 0
+        return self.num_blk == 0 or self.num_red == 0 or len(self.pos_moves) == 0
 
-    def count_avail_moves(self) -> set[Tuple[int, int]]:
+    def avail_moves(self) -> Set[Tuple[int, int]]:
+        moves = set()
+
         for i, row in enumerate(self.board):
             for j, sq in enumerate(row):
-                if sq and sq.get_color == self.cur_player:
+                if sq and sq.get_color() == self.cur_player:
                     # TODO: functionality to get moves
-                    pass
+                    for new_row, new_col in sq.get_moves(i, j):
+                        new_sq = self.board[new_row][new_col]
+                        if not new_sq:
+                            moves.add((new_row, new_col))
+                        elif new_sq.get_color() != self.cur_player:
+                            # TODO: functionality to get capturing moves
+                            for new_new_row, new_new_col in sq.get_moves(new_row, new_col):
+                                new_new_sq = self.board[new_new_row][new_new_col]
+                                if not new_new_sq:
+                                    moves.add((new_new_row, new_new_col))
 
-    def get_winner(self) -> str:
-        return self.winner
+        return moves
 
-    def get_board(self):
+    def get_board(self) -> List[List[Piece]]:
         return self.board
 
-    def get_cur_player(self):
+    def get_cur_player(self) -> str:
         return self.cur_player
+
+    def get_avail_moves(self) -> Set[Tuple[int, int]]:
+        return self.pos_moves

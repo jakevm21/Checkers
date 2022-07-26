@@ -4,9 +4,7 @@ from game_settings import GameSettings
 from gamestate import GameState
 from gui import GUI
 from piece_options import *
-BLK_PIECES = (BLK_R, BLK_K)
-RED_PIECES = (RED_R, RED_K)
-MOVES = (-2, -1, 1, 2)
+from pieces import *
 
 
 class Game:
@@ -76,14 +74,17 @@ class Game:
 
     def _is_player_piece(self, row: int, col: int) -> bool:
         sq = self.gs.get_board()[row][col]
-        if self.gs.get_cur_player() == BLK:
-            return sq == BLK_R or sq == BLK_K
-        else:
-            return sq == RED_R or sq == RED_K
+        return sq and sq.get_color() == self.gs.get_cur_player()
 
     def _get_available_moves(self, row: int, col: int) -> List[Tuple[int, int]]:
+        moves = []
         piece = self.gs.board[row][col]
-        
+
+        for sq in piece.get_moves(row, col):
+            if sq in self.gs.get_avail_moves():
+                moves.append(sq)
+
+        return moves
 
     def _handle_move(self, row: int, col: int) -> None:
         self.gui.select_piece(row, col, self.gs.get_board()[row][col])
@@ -104,6 +105,13 @@ class Game:
             return
         else:
             print("That's your piece!")
+
+        moves = self._get_available_moves(row, col)
+        if not moves:
+            print("That piece cannot move!")
+            return
+        else:
+            print("That piece can move!")
 
         self._handle_move()
 
