@@ -1,13 +1,12 @@
 import turtle as turt
 from typing import List, Tuple
 from piece_options import *
-from pieces import Piece
+from pieces import *
 
 
 SQ_COLOR = "light gray"
 OUTLINE_COLOR = "black"
 BG_COLOR = "white"
-CROWN_POS = 7
 SELECTION_COLOR = "blue"
 
 class GUI:
@@ -73,7 +72,8 @@ class GUI:
                     self._draw_square(self.sq_size, OUTLINE_COLOR, SQ_COLOR)
                 # Draw the checkers
                 if sq:
-                    self._draw_checker(sq.get_color(), sq.get_rank())
+                    self._draw_checker(x_pos + self.piece_pos, y_pos,
+                                       sq.get_color(), sq.get_rank())
 
     def _draw_square(self, size: int, outline_color: str, fill_color: str) -> None:
             RIGHT_ANGLE = 90
@@ -86,21 +86,23 @@ class GUI:
             self.pen.end_fill()
             self.pen.penup()
 
-    def _draw_circle(self, size):
+    def _draw_circle(self, size: int) -> None:
         self.pen.pendown()
         self.pen.begin_fill()
         self.pen.circle(size)
         self.pen.end_fill()
         self.pen.penup()
 
-    def _draw_checker(self, color: str, rank: int) -> None:
+    def _draw_checker(self, x_pos: float, y_pos: float, color: str, rank: int) -> None:
+        self.pen.setposition(x_pos, y_pos)
         self.pen.color(color)
 
         self._draw_circle(self.piece_size)
         # if piece is king draw crown
         if rank == KNG:
-            # TODO: Draw crown
-            pass
+            self.pen.setposition(x_pos, y_pos + self.crown_pos)
+            self.pen.pencolor(CROWN_COLOR)
+            self._draw_circle(self.crow_size)
 
     def click_to_square(self, x: float, y: float) -> Tuple[int, int]:
         if y < 0:
@@ -126,20 +128,20 @@ class GUI:
         self._draw_square(self.sq_size, SELECTION_COLOR, SQ_COLOR)
 
         # redraw piece
-        self.pen.setposition(x_pos + self.piece_pos, y_pos)
-        self._draw_checker(piece.get_color(), piece.get_rank())
+        self._draw_checker(x_pos + self.piece_pos, y_pos,
+                           piece.get_color(), piece.get_rank())
 
-    def get_brd_size(self):
+    def get_brd_size(self) -> int:
         return self.brd_size
 
-    def get_x_max(self):
+    def get_x_max(self) -> int:
         return self.brd_x_max
 
-    def get_x_min(self):
+    def get_x_min(self) -> int:
         return self.brd_x_min
 
-    def get_y_max(self):
+    def get_y_max(self) -> int:
         return self.brd_y_max
 
-    def get_y_min(self):
+    def get_y_min(self) -> int:
         return self.brd_y_min
