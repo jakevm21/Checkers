@@ -78,7 +78,7 @@ class Game:
 
     def _get_available_moves(self, row: int, col: int) -> List[Tuple[int, int]]:
         moves = []
-        piece = self.gs.board[row][col]
+        piece = self.gs.get_board()[row][col]
 
         for sq in piece.get_moves(row, col):
             if sq in self.gs.get_avail_moves():
@@ -112,8 +112,9 @@ class Game:
             return
         else:
             print("That piece can move!")
+            print(moves)
 
-        self._handle_move()
+        self._handle_move(row, col)
 
     def _game_loop(self):
         self.screen.onclick(self._click_handler)

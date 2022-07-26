@@ -72,17 +72,16 @@ class GUI:
                     self._draw_square(self.sq_size, OUTLINE_COLOR, SQ_COLOR)
                 # Draw the checkers
                 if sq:
-                    self._draw_checker(x_pos + self.piece_pos, y_pos,
-                                       sq.get_color(), sq.get_rank())
+                    self._draw_checker(x_pos + self.piece_pos, y_pos, sq)
 
     def _draw_square(self, size: int, outline_color: str, fill_color: str) -> None:
-            RIGHT_ANGLE = 90
+            ANGLE = 90
             self.pen.color(outline_color, fill_color)
             self.pen.pendown()
             self.pen.begin_fill()
             for _ in range(4):
                 self.pen.forward(size)
-                self.pen.left(RIGHT_ANGLE)
+                self.pen.left(ANGLE)
             self.pen.end_fill()
             self.pen.penup()
 
@@ -93,13 +92,13 @@ class GUI:
         self.pen.end_fill()
         self.pen.penup()
 
-    def _draw_checker(self, x_pos: float, y_pos: float, color: str, rank: int) -> None:
+    def _draw_checker(self, x_pos: float, y_pos: float, piece: Piece) -> None:
         self.pen.setposition(x_pos, y_pos)
-        self.pen.color(color)
+        self.pen.color(piece.get_color())
 
         self._draw_circle(self.piece_size)
         # if piece is king draw crown
-        if rank == KNG:
+        if piece.get_rank() == KNG:
             self.pen.setposition(x_pos, y_pos + self.crown_pos)
             self.pen.pencolor(CROWN_COLOR)
             self._draw_circle(self.crow_size)
@@ -128,8 +127,7 @@ class GUI:
         self._draw_square(self.sq_size, SELECTION_COLOR, SQ_COLOR)
 
         # redraw piece
-        self._draw_checker(x_pos + self.piece_pos, y_pos,
-                           piece.get_color(), piece.get_rank())
+        self._draw_checker(x_pos + self.piece_pos, y_pos, piece)
 
     def get_brd_size(self) -> int:
         return self.brd_size
