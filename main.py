@@ -125,14 +125,7 @@ def draw_square(a_turtle, size):
         Returns:
             Nothing. Draws a square in the graphics window.
     '''
-    RIGHT_ANGLE = 90
-    a_turtle.pendown()
-    a_turtle.begin_fill()
-    for i in range(4):
-        a_turtle.forward(size)
-        a_turtle.left(RIGHT_ANGLE)
-    a_turtle.end_fill()
-    a_turtle.penup()
+    pass
 
 
 def draw_circle(a_turtle, size):
@@ -145,11 +138,7 @@ def draw_circle(a_turtle, size):
         Returns:
             Nothing. Draws a circle in the graphics window.
     '''
-    a_turtle.pendown()
-    a_turtle.begin_fill()
-    a_turtle.circle(size)
-    a_turtle.end_fill()
-    a_turtle.penup()
+    pass
 
 
 def draw_board(a_turtle):
@@ -161,11 +150,7 @@ def draw_board(a_turtle):
         Returns:
             Nothing. Draws the board in the graphics window.
     '''
-    # Board outline is black, filler is white
-    a_turtle.color("black", "white")
-    # Outline of checkerboard
-    a_turtle.setposition(DEFAULT_POSITION, DEFAULT_POSITION)
-    draw_square(a_turtle, BOARD_SIZE)
+    pass
 
 
 def draw_board_squares(a_turtle):
@@ -177,18 +162,7 @@ def draw_board_squares(a_turtle):
         Returns:
             Nothing. Draws the squares in the graphics window.
     '''
-    for col in range(NUM_SQUARES):
-        for row in range(NUM_SQUARES):
-            # Places pen in bottom left of each square
-            a_turtle.setposition(DEFAULT_POSITION + SQUARE * col,
-                                 DEFAULT_POSITION + SQUARE * row)
-            # Draw a square at every other square
-            if col % 2 != row % 2:
-                # Outline is black, filling is light gray
-                a_turtle.color("black", SQUARE_COLORS[0])
-                draw_square(a_turtle, SQUARE)
-                # Draw the checkers
-                draw_checkers(a_turtle, col, row, BOARD.board)
+    pass
 
 
 def draw_checkers(a_turtle, col, row, board):
@@ -204,32 +178,7 @@ def draw_checkers(a_turtle, col, row, board):
         Returns:
             Nothing. Draws a checker in the graphics window.
     '''
-    CROWN_POS = 7
-    CROWN_SIZE = CHECKER_SIZE * 0.7
-    # Set the turtle in position to draw a checker
-    x_pos = DEFAULT_POSITION + (SQUARE * col) + CHECKER_POSITION
-    y_pos = DEFAULT_POSITION + SQUARE * row
-    a_turtle.setposition(x_pos, y_pos)
-    # Draw black checkers
-    if board[row][col] == BLACK:
-        a_turtle.color(CHECKER_COLORS[0])
-        draw_circle(a_turtle, CHECKER_SIZE)
-    elif board[row][col] == K_BLACK:
-        a_turtle.color(CHECKER_COLORS[0])
-        draw_circle(a_turtle, CHECKER_SIZE)
-        a_turtle.setposition(x_pos, y_pos + CROWN_POS)
-        a_turtle.color("white", CHECKER_COLORS[0])
-        draw_circle(a_turtle, CROWN_SIZE)
-    # Draw red checkers
-    elif board[row][col] == RED:
-        a_turtle.color(CHECKER_COLORS[1])
-        draw_circle(a_turtle, CHECKER_SIZE)
-    elif board[row][col] == K_RED:
-        a_turtle.color(CHECKER_COLORS[1])
-        draw_circle(a_turtle, CHECKER_SIZE)
-        a_turtle.setposition(x_pos, y_pos + CROWN_POS)
-        a_turtle.color("white", CHECKER_COLORS[1])
-        draw_circle(a_turtle, CROWN_SIZE)
+    pass
 
 
 def select_checker(a_turtle, col, row):
@@ -243,12 +192,7 @@ def select_checker(a_turtle, col, row):
         Returns:
             Nothing.
     '''
-    # Draw an outline around the square of the selected checker
-    a_turtle.setposition(DEFAULT_POSITION + SQUARE * col,
-                         DEFAULT_POSITION + SQUARE * row)
-    # Make the outline blue
-    a_turtle.color(SQUARE_COLORS[2], SQUARE_COLORS[0])
-    draw_square(a_turtle, SQUARE)
+    pass
 
 
 def draw_available_moves(a_turtle, col, row):
@@ -355,15 +299,6 @@ def victory_message(winner):
 
 def main():
     Game()
-
-    # # Click handling
-    # screen = turtle.Screen()
-    # try:
-    #     screen.onclick(click_handler)
-    # except IndexError:
-    #     print("Click was out of bounds!")
-
-    # turtle.done()  # Stops the window from closing
 
 
 if __name__ == "__main__":
