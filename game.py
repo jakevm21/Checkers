@@ -80,12 +80,12 @@ class Game:
         moves = []
         piece = self.gs.get_board()[row][col]
 
-        for sq in piece.get_moves(row, col):
-            if sq in self.gs.get_avail_moves():
-                moves.append(sq)
-        for sq in piece.get_cap_moves(row, col):
-            if sq in self.gs.get_avail_moves():
-                moves.append(sq)
+        for sq in piece.get_moves(row, col, self.gs.get_board()):
+            # if sq in self.gs.get_avail_moves():
+            moves.append(sq)
+        # for sq in piece.get_cap_moves(row, col):
+        #     if sq in self.gs.get_avail_moves():
+        #         moves.append(sq)
 
         return moves
 

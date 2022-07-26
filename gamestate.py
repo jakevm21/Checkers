@@ -37,7 +37,7 @@ class GameState:
         self.num_blk = START_PIECE_COUNT
         self.num_red = START_PIECE_COUNT
         self._board = DEFAULT_BOARD
-        self.pos_moves = self.avail_moves()
+        self.pos_moves = self.avail_moves(self.cur_plyr)
         self._selection_made = False
         self._sel_pce_row = None
         self._sel_pce_col = None
@@ -54,7 +54,7 @@ class GameState:
                 Nothing.
         '''
         self.cur_plyr, self.op_plyr = self.op_plyr, self.cur_plyr
-        self.pos_moves = self.avail_moves()
+        self.pos_moves = self.avail_moves(self.cur_plyr)
 
     def game_over(self):
         '''
@@ -70,23 +70,14 @@ class GameState:
         '''
         return self.num_blk == 0 or self.num_red == 0 or len(self.pos_moves) == 0
 
-    def avail_moves(self) -> Set[Tuple[int, int]]:
+    def avail_moves(self, plyr: str) -> Set[Tuple[int, int]]:
         moves = set()
 
         for i, row in enumerate(self._board):
             for j, sq in enumerate(row):
-                if sq and sq.get_color() == self.cur_plyr:
-                    # TODO: functionality to get moves
-                    for r, c in sq.get_moves(i, j):
-                        new_sq = self._board[r][c]
-                        if not new_sq:
-                            moves.add((r, c))
-                        elif new_sq.get_color() != self.cur_plyr:
-                            # TODO: functionality to get capturing moves
-                            for r, c in sq.get_cap_moves(i, j):
-                                new_sq = self._board[r][c]
-                                if not new_sq:
-                                    moves.add((r, c))
+                if sq and sq.get_color() == plyr:
+                    for new_sq in sq.get_moves(i, j, self._board):
+                        moves.add(new_sq)
 
         return moves
 
@@ -132,13 +123,16 @@ class GameState:
     def move_piece(self, new_row: int, new_col: int) -> None:
         if abs(new_row - self._sel_pce_row) == 2:
             self._capture_move(new_row, new_col)
+        if (new_row == 0 or new_row == len(self._board) - 1) and \
+           self._sel_pce.get_rank() != KNG:
+           self._sel_pce.rank_up()
         self._board[new_row][new_col] = self._sel_pce
         self._board[self._sel_pce_row][self._sel_pce_col] = None
         self.unselect_piece()
 
     def get_winner(self) -> str:
-        if self.num_blk == 0 or (self.op_plyr == BLK and self.pos_moves == 0):
+        if self.num_blk == 0 or (self.op_plyr == BLK and len(self.pos_moves) == 0):
             return BLK
-        if self.num_red == 0 or (self.op_plyr == RED and self.pos_moves == 0):
+        if self.num_red == 0 or (self.op_plyr == RED and len(self.pos_moves) == 0):
             return RED
         return None
