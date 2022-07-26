@@ -1,5 +1,5 @@
 import turtle as turt
-from typing import List, Tuple
+from typing import *
 from piece_options import *
 from pieces import *
 
@@ -8,6 +8,7 @@ SQ_COLOR = "light gray"
 OUTLINE_COLOR = "black"
 BG_COLOR = "white"
 SELECTION_COLOR = "blue"
+MOVE_COLOR = "red"
 
 class GUI:
     def __init__(self, num_sqs=NUM_SQS, sq_size=SQ_SIZE) -> None:
@@ -103,6 +104,24 @@ class GUI:
             self.pen.pencolor(CROWN_COLOR)
             self._draw_circle(self.crow_size)
 
+    def victory_msg(self, winner: str) -> None:
+        font = "century"
+        font_size = 30
+        font_type = "bold"
+        x_pos = self.def_pos + self.brd_size >> 1
+
+        self.pen.setposition(x_pos, self.def_pos + 250)
+        self.pen.color("green")
+        self.pen.write(arg="Game Over!", 
+                       move=False,
+                       align="center",
+                       font=(font, font_size, font_type))
+        self.pen.setposition(x_pos, self.def_pos + 150)
+        self.pen.write(arg=f"{winner} Wins",
+                       move=False,
+                       align="center",
+                       font=(font, font_size, font_type))
+
     def click_to_square(self, x: float, y: float) -> Tuple[int, int]:
         if y < 0:
             row = self.brd_y_max - abs(y)
@@ -118,16 +137,22 @@ class GUI:
 
         return (row, col)
 
-    def select_piece(self, row: int, col: int, piece: Piece) -> None:
+    def select_piece(self, row: int, col: int, piece: Piece, moves: Set[Tuple[int, int]]) -> None:
         x_pos = self.def_pos + (self.sq_size * col)
         y_pos = self.def_pos + (self.sq_size * row)
 
         # change outline to blue
         self.pen.setposition(x_pos, y_pos)
         self._draw_square(self.sq_size, SELECTION_COLOR, SQ_COLOR)
-
         # redraw piece
         self._draw_checker(x_pos + self.piece_pos, y_pos, piece)
+
+        # draw moves
+        for mv_row, mv_col in moves:
+            x_pos = self.def_pos + (self.sq_size * mv_col)
+            y_pos = self.def_pos + (self.sq_size * mv_row)
+            self.pen.setposition(x_pos, y_pos)
+            self._draw_square(self.sq_size, MOVE_COLOR, SQ_COLOR)
 
     def get_brd_size(self) -> int:
         return self.brd_size
