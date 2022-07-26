@@ -87,11 +87,19 @@ class Game:
         return moves
 
     def _handle_move(self, row: int, col: int) -> None:
-        self.gui.select_piece(row, col, self.gs.get_board()[row][col])
+        if (row, col) not in self.gs.get_selected_piece_moves():
+            print("That is not a valid move!")
+            # self.gui.select_piece(row,
+            #                       col,
+            #                       self.gs.get_board()[row][col],
+            #                       self.gs.get_selected_piece_moves())
+            return
+        else:
+            self.gs.move_piece(row, col)
+            self.gui.draw_board(self.gs.get_board())
+            self.gs.swap_turn()
 
     def _click_handler(self, x: float, y: float) -> None:
-        self.gui.draw_board(self.gs.get_board())
-
         print("Clicked at", x, y)
 
         if not self._is_inbounds(x, y):
@@ -100,23 +108,36 @@ class Game:
         
         row, col = self.gui.click_to_square(x, y)
 
-        if not self._is_player_piece(row, col):
-            print("That's not your piece!")
-            return
+        if self.gs.selection_made():
+            self._handle_move(row, col)
         else:
-            print("That's your piece!")
+            if not self._is_player_piece(row, col):
+                print("That's not your piece!")
+                return
+            else:
+                print("That's your piece!")
 
-        moves = self._get_available_moves(row, col)
-        if not moves:
-            print("That piece cannot move!")
-            return
-        else:
-            print("That piece can move!")
-            print(moves)
+            moves = self._get_available_moves(row, col)
+            if not moves:
+                print("That piece cannot move!")
+                return
+            else:
+                print("That piece can move!")
+                print(moves)
+                # update gamestate
+                self.gs.select_piece(row, col, moves)
+                # update gui
+                self.gui.draw_board(self.gs.get_board())
+                self.gui.select_piece(row,
+                                      col,
+                                      self.gs.get_board()[row][col],
+                                      self.gs.get_selected_piece_moves())
 
-        self._handle_move(row, col)
+        if self.gs.game_over():
+            self.gui.victory_msg(self.gs.get_winner())
 
     def _game_loop(self):
+        self.gui.draw_board(self.gs.get_board())
         self.screen.onclick(self._click_handler)
 
         turt.done()
