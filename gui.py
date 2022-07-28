@@ -15,14 +15,14 @@ class GUI:
         self.num_sqs = num_sqs
         self.sq_size = sq_size
         self.brd_size = num_sqs * sq_size         # Size of the board
-        self.brd_x_max = self.brd_size >> 1
+        self.brd_x_max = self.brd_size / 2
         self.brd_x_min = -self.brd_x_max
-        self.brd_y_max = self.brd_size >> 1
+        self.brd_y_max = self.brd_size / 2
         self.brd_y_min = -self.brd_y_max
         self.wndw_size = self.brd_size + sq_size  # The extra + SQUARE is the margin
-        self.def_pos = (-self.brd_size >> 1) - 1  # Bottom left corner of board
-        self.piece_pos = self.sq_size >> 1        # Center of a square
-        self.piece_size = self.sq_size >> 1
+        self.def_pos = (-self.brd_size / 2) - 1  # Bottom left corner of board
+        self.piece_pos = self.sq_size / 2        # Center of a square
+        self.piece_size = self.sq_size / 2
         self.crown_pos = CROWN_POS                # Position of crown on piece
         self.crow_size = self.piece_size * 0.7    # Size of crown on piece
 
@@ -108,7 +108,7 @@ class GUI:
         font = "century"
         font_size = 30
         font_type = "bold"
-        x_pos = self.def_pos + self.brd_size >> 1
+        x_pos = self.def_pos + self.brd_size / 2
 
         self.pen.setposition(x_pos, self.def_pos + 250)
         self.pen.color("green")
@@ -117,7 +117,7 @@ class GUI:
                        align="center",
                        font=(font, font_size, font_type))
         self.pen.setposition(x_pos, self.def_pos + 150)
-        self.pen.write(arg=f"{winner} Wins",
+        self.pen.write(arg=f"{winner.capitalize()} Wins",
                        move=False,
                        align="center",
                        font=(font, font_size, font_type))
