@@ -131,8 +131,10 @@ class GameState:
         self.unselect_piece()
 
     def get_winner(self) -> str:
-        if self.num_blk == 0 or (self.op_plyr == BLK and len(self.pos_moves) == 0):
+        if self.num_red == 0 or (self.cur_plyr == RED and \
+                                 len(self.pos_moves) == 0):
             return BLK
-        if self.num_red == 0 or (self.op_plyr == RED and len(self.pos_moves) == 0):
+        if self.num_blk == 0 or (self.cur_plyr == BLK and \
+                                 len(self.pos_moves) == 0):
             return RED
         return None
