@@ -1,4 +1,4 @@
-from piece_options import *
+from constants import *
 
 class GameSettings:
     def __init__(self, num_plrs: int, p1_color=BLK, p2_color=RED) -> None:

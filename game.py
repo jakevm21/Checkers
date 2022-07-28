@@ -3,7 +3,7 @@ from typing import List, Tuple
 from game_settings import GameSettings
 from gamestate import GameState
 from gui import GUI
-from piece_options import *
+from constants import *
 from pieces import *
 
 
@@ -81,11 +81,7 @@ class Game:
         piece = self.gs.get_board()[row][col]
 
         for sq in piece.get_moves(row, col, self.gs.get_board()):
-            # if sq in self.gs.get_avail_moves():
             moves.append(sq)
-        # for sq in piece.get_cap_moves(row, col):
-        #     if sq in self.gs.get_avail_moves():
-        #         moves.append(sq)
 
         return moves
 
@@ -126,6 +122,7 @@ class Game:
                 # update gamestate
                 self.gs.select_piece(row, col, moves)
                 # update gui
+                self.gui.clear_board()
                 self.gui.draw_board(self.gs.get_board())
                 self.gui.select_piece(row,
                                       col,

@@ -1,14 +1,17 @@
 import turtle as turt
-from typing import *
-from piece_options import *
+from typing import Set, Tuple
+from constants import *
 from pieces import *
 
 
-SQ_COLOR = "light gray"
-OUTLINE_COLOR = "black"
-BG_COLOR = "white"
-SELECTION_COLOR = "blue"
-MOVE_COLOR = "red"
+SQ_CLR = "light gray"
+OUTLINE_CLR = "black"
+BRD_BG_CLR = "white"
+SEL_PCE_CLR = "blue"
+MV_CLR = "red"
+V_MSG_CLR = "green"
+CROWN_CLR = "white"
+CROWN_POS = 7
 
 class GUI:
     def __init__(self, num_sqs=NUM_SQS, sq_size=SQ_SIZE) -> None:
@@ -20,8 +23,8 @@ class GUI:
         self.brd_y_max = self.brd_size / 2
         self.brd_y_min = -self.brd_y_max
         self.wndw_size = self.brd_size + sq_size  # The extra + SQUARE is the margin
-        self.def_pos = (-self.brd_size / 2) - 1  # Bottom left corner of board
-        self.piece_pos = self.sq_size / 2        # Center of a square
+        self.def_pos = (-self.brd_size / 2) - 1   # Bottom left corner of board
+        self.piece_pos = self.sq_size / 2         # Center of a square
         self.piece_size = self.sq_size / 2
         self.crown_pos = CROWN_POS                # Position of crown on piece
         self.crow_size = self.piece_size * 0.7    # Size of crown on piece
@@ -35,7 +38,7 @@ class GUI:
 
         # Set the drawing canvas size. The should be actual board size
         turt.screensize(self.brd_size, self.brd_size)
-        turt.bgcolor(BG_COLOR)  # The window's background color
+        turt.bgcolor(BRD_BG_CLR)  # The window's background color
         turt.tracer(0, 0)       # makes the drawing appear immediately
     
     def _initialize_turt(self) -> turt.Turtle:
@@ -46,21 +49,29 @@ class GUI:
     
     def draw_board(self, brd: List[List[Piece]]) -> None:
         '''
-            Function -- draw_board
-                Draws the outline of the board of a predefined size.
-            Parameters:
-                a_turtle -- an instance of Turtle
-            Returns:
-                Nothing. Draws the board in the graphics window.
+        Draws the checkerboard of a predefined size.
+
+        Arguments:\n
+        brd
+            The board to be drawn.
+
+        Returns:
+            Nothing.
         '''
         # Board outline is black, filler is white
-        self.pen.color(OUTLINE_COLOR, BG_COLOR)
+        self.pen.color(OUTLINE_CLR, BRD_BG_CLR)
         # Outline of checkerboard
         self.pen.setposition(self.def_pos, self.def_pos)
-        self._draw_square(self.brd_size, OUTLINE_COLOR, BG_COLOR)
+        self._draw_square(self.brd_size, OUTLINE_CLR, BRD_BG_CLR)
         # Each checkerboard square
         self._draw_all_squares(brd)
-    
+
+    def clear_board(self) -> None:
+        '''
+        Clears the board to be redrawn.
+        '''
+        self.pen.clear()
+
     def _draw_all_squares(self, brd: List[List[Piece]]) -> None:
         for i, row in enumerate(brd):
             for j, sq in enumerate(row):
@@ -70,14 +81,14 @@ class GUI:
                 self.pen.setposition(x_pos, y_pos)
                 # Draw a square at every other square
                 if i % 2 != j % 2:
-                    self._draw_square(self.sq_size, OUTLINE_COLOR, SQ_COLOR)
+                    self._draw_square(self.sq_size, OUTLINE_CLR, SQ_CLR)
                 # Draw the checkers
                 if sq:
                     self._draw_checker(x_pos + self.piece_pos, y_pos, sq)
 
-    def _draw_square(self, size: int, outline_color: str, fill_color: str) -> None:
+    def _draw_square(self, size: int, outline_clr: str, fill_color: str) -> None:
             ANGLE = 90
-            self.pen.color(outline_color, fill_color)
+            self.pen.color(outline_clr, fill_color)
             self.pen.pendown()
             self.pen.begin_fill()
             for _ in range(4):
@@ -101,7 +112,7 @@ class GUI:
         # if piece is king draw crown
         if piece.get_rank() == KNG:
             self.pen.setposition(x_pos, y_pos + self.crown_pos)
-            self.pen.pencolor(CROWN_COLOR)
+            self.pen.pencolor(CROWN_CLR)
             self._draw_circle(self.crow_size)
 
     def victory_msg(self, winner: str) -> None:
@@ -143,7 +154,7 @@ class GUI:
 
         # change outline to blue
         self.pen.setposition(x_pos, y_pos)
-        self._draw_square(self.sq_size, SELECTION_COLOR, SQ_COLOR)
+        self._draw_square(self.sq_size, SEL_PCE_CLR, SQ_CLR)
         # redraw piece
         self._draw_checker(x_pos + self.piece_pos, y_pos, piece)
 
@@ -152,7 +163,7 @@ class GUI:
             x_pos = self.def_pos + (self.sq_size * mv_col)
             y_pos = self.def_pos + (self.sq_size * mv_row)
             self.pen.setposition(x_pos, y_pos)
-            self._draw_square(self.sq_size, MOVE_COLOR, SQ_COLOR)
+            self._draw_square(self.sq_size, MV_CLR, SQ_CLR)
 
     def get_brd_size(self) -> int:
         return self.brd_size

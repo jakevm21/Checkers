@@ -6,7 +6,7 @@ is an ai player or two human players, and whether the game over conditions
 have been met.
 '''
 from typing import Set, Tuple
-from piece_options import *
+from constants import *
 from pieces import *
 DEFAULT_BOARD = [
     [None, BlackPiece(), None, BlackPiece(), None, BlackPiece(), None, BlackPiece()],

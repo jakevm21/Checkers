@@ -1,5 +1,5 @@
 from typing import List, Tuple
-from piece_options import *
+from constants import *
 UP = 'u'
 DOWN = 'd'
 LEFT = 'l'
