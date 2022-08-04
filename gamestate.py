@@ -32,12 +32,12 @@ class GameState:
             Parameters:
                 self -- the current GameState object.
         '''
-        self.cur_plyr = BLK
-        self.op_plyr = RED
-        self.num_blk = START_PIECE_COUNT
-        self.num_red = START_PIECE_COUNT
+        self._cur_plyr = BLK
+        self._op_plyr = RED
+        self._num_blk = START_PIECE_COUNT
+        self._num_red = START_PIECE_COUNT
         self._board = DEFAULT_BOARD
-        self.pos_moves = self.avail_moves(self.cur_plyr)
+        self._pos_moves = self.avail_moves(self._cur_plyr)
         self._selection_made = False
         self._sel_pce_row = None
         self._sel_pce_col = None
@@ -53,8 +53,8 @@ class GameState:
             Returns:
                 Nothing.
         '''
-        self.cur_plyr, self.op_plyr = self.op_plyr, self.cur_plyr
-        self.pos_moves = self.avail_moves(self.cur_plyr)
+        self._cur_plyr, self._op_plyr = self._op_plyr, self._cur_plyr
+        self._pos_moves = self.avail_moves(self._cur_plyr)
 
     def game_over(self):
         '''
@@ -68,7 +68,7 @@ class GameState:
                 can move. Otherwise returns true and defines the winner
                 attribute according to the winning color.
         '''
-        return self.num_blk == 0 or self.num_red == 0 or len(self.pos_moves) == 0
+        return self._num_blk == 0 or self._num_red == 0 or len(self._pos_moves) == 0
 
     def avail_moves(self, plyr: str) -> Set[Tuple[int, int]]:
         moves = set()
@@ -85,10 +85,10 @@ class GameState:
         return self._board
 
     def get_cur_player(self) -> str:
-        return self.cur_plyr
+        return self._cur_plyr
 
     def get_avail_moves(self) -> Set[Tuple[int, int]]:
-        return self.pos_moves
+        return self._pos_moves
 
     def get_selected_piece_moves(self) -> Set[Tuple[int, int]]:
         return self._sel_pce_mvs
@@ -115,9 +115,9 @@ class GameState:
         cap_col = min(new_col, self._sel_pce_col) + 1
         cap_piece = self._board[cap_row][cap_col]
         if cap_piece.get_color() == BLK:
-            self.num_blk -= 1
+            self._num_blk -= 1
         else:
-            self.num_red -= 1
+            self._num_red -= 1
         self._board[cap_row][cap_col] = None
 
     def move_piece(self, new_row: int, new_col: int) -> None:
@@ -131,10 +131,10 @@ class GameState:
         self.unselect_piece()
 
     def get_winner(self) -> str:
-        if self.num_red == 0 or (self.cur_plyr == RED and \
-                                 len(self.pos_moves) == 0):
+        if self._num_red == 0 or (self._cur_plyr == RED and \
+                                 len(self._pos_moves) == 0):
             return BLK
-        if self.num_blk == 0 or (self.cur_plyr == BLK and \
-                                 len(self.pos_moves) == 0):
+        if self._num_blk == 0 or (self._cur_plyr == BLK and \
+                                 len(self._pos_moves) == 0):
             return RED
         return None

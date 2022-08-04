@@ -8,17 +8,17 @@ RIGHT = 'r'
 
 class Piece:
     def __init__(self, color: str, rank: int) -> None:
-        self.color = color
-        self.rank = rank
+        self._color = color
+        self._rank = rank
 
     def rank_up(self) -> None:
-        self.rank = KNG
+        self._rank = KNG
 
     def get_color(self) -> str:
-        return self.color
+        return self._color
 
     def get_rank(self) -> int:
-        return self.rank
+        return self._rank
 
     def get_moves(self, row: int, col: int) -> List[Tuple[int, int]]:
         pass
@@ -34,7 +34,7 @@ class BlackPiece(Piece):
         super().__init__(BLK, rank)
 
     def _can_cap(self, row: int, col: int, vert_dir: str, h_dir: str, brd: List[List[Piece]]) -> bool:
-        if brd[row][col].get_color() == self.color:
+        if brd[row][col].get_color() == self._color:
             return False
         if vert_dir == UP and row < len(brd) - 1:
             if h_dir == LEFT:
@@ -66,7 +66,7 @@ class BlackPiece(Piece):
                 elif self._can_cap(u, r, UP, RIGHT, brd):
                     moves.append((row + 2, col + 2))
 
-        if self.rank == KNG and row > 0:
+        if self._rank == KNG and row > 0:
             if col > 0:
                 if not brd[d][l]:
                     moves.append((d, l))
@@ -88,7 +88,7 @@ class BlackPiece(Piece):
                 moves.append((row + 2, col - 2))
             if col + 2 <= NUM_SQS - 1:
                 moves.append((row + 2, col + 2))
-        if self.rank == KNG and row - 2 >= 0:
+        if self._rank == KNG and row - 2 >= 0:
             if col - 2 >= 0:
                 moves.append((row - 2, col - 2))
             if col + 2 <= NUM_SQS - 1:
@@ -101,7 +101,7 @@ class RedPiece(Piece):
         super().__init__(RED, rank)
 
     def _can_cap(self, row: int, col: int, vert_dir: str, h_dir: str,brd: List[List[Piece]]):
-        if brd[row][col].get_color() == self.color:
+        if brd[row][col].get_color() == self._color:
             return False
         if vert_dir == UP and row < len(brd) - 1:
             if h_dir == LEFT:
@@ -133,7 +133,7 @@ class RedPiece(Piece):
                 elif self._can_cap(d, r, DOWN, RIGHT, brd):
                     moves.append((row - 2, col + 2))
 
-        if self.rank == KNG and row < len(brd) - 1:
+        if self._rank == KNG and row < len(brd) - 1:
             if col > 0:
                 if not brd[u][l]:
                     moves.append((u, l))
@@ -155,7 +155,7 @@ class RedPiece(Piece):
                 moves.append((row - 2, col - 2))
             if col + 2 <= NUM_SQS - 1:
                 moves.append((row - 2, col + 2))
-        if self.rank == KNG and row + 2 <= NUM_SQS - 1:
+        if self._rank == KNG and row + 2 <= NUM_SQS - 1:
             if col - 2 >= 0:
                 moves.append((row + 2, col - 2))
             if col + 2 <= NUM_SQS - 1:
