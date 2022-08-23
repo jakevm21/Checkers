@@ -8,7 +8,7 @@ This program provides a gui with which you can play checkers against the compute
 I did my best to follow SOLID design principles when implementing the game. This involved encapsulating different functionalities such as the
 board (model), gui (view), and input/move processor (controller) inside of distinct classes.
 
-Learn more about the game here: https://en.wikipedia.org/wiki/Checkers.
+Feel free to read more about the game here: https://en.wikipedia.org/wiki/Checkers. The history of the game is actually super fascinating!
 
 # Getting Started
 
