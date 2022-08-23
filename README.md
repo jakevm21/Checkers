@@ -4,7 +4,10 @@ The classic game of Checkers (a.k.a. draughts).
 
 # About
 
-This program provides a gui with which you can play checkers against the computer or another player. Learn more about the game here: https://en.wikipedia.org/wiki/Checkers.
+This program provides a gui with which you can play checkers against the computer or another player. I used Python's Turtle library to draw the gui.
+I did my best to follow SOLID design principles when implementing the game.
+
+Learn more about the game here: https://en.wikipedia.org/wiki/Checkers.
 
 # Getting Started
 
