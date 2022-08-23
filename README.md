@@ -14,7 +14,7 @@ Python must be installed.
 
 ## Running
 
-Clone the repo to a location of your choice then run:
+Clone the repo to a location of your choice, navigate into the repo from a CLI, then run:
 
 <code>python ./main.py</code>
 
